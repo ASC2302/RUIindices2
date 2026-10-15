@@ -2,10 +2,10 @@
 #'
 #' This function reads a tree or collection of trees, extracts all subtrees
 #' within a specified tip-count range, and calculates tree shape indices for
-#' each subtree using [all_indices()].
+#' each subtree using `all_indices()`.
 #'
 #' Invalid trees are rejected before calculation. Invalid outputs, such as J
-#' values outside [0, 1], are also rejected.
+#' values outside the interval from `0` to `1` are also rejected.
 #'
 #' @param file A file path to a tree file in Newick or NEXUS format, a Newick
 #'   string, or a phylo/multiPhylo object.

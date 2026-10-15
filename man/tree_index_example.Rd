@@ -7,10 +7,9 @@
 tree_index_example(file = NULL)
 }
 \arguments{
-\item{file}{\code{NULL}, \code{"rphylo.nwk"}, or
-\code{"sim-taxa.nwk"}. When \code{NULL}, the available filenames are
-returned. Otherwise, the complete installed path to the selected file is
-returned.}
+\item{file}{\code{NULL}, \code{"rphylo.nwk"}, or \code{"sim-taxa.nwk"}. When \code{NULL}, the
+available filenames are returned. Otherwise, the complete installed path
+to the selected file is returned.}
 }
 \value{
 A character vector of available filenames when \code{file = NULL}, or a
@@ -18,14 +17,13 @@ single complete file path when a filename is supplied.
 }
 \description{
 \code{RUIindices2} includes two raw Newick files that can be used in
-examples, tests, and exploratory analyses. This helper returns their names or
-the complete path to one installed file.
+examples, tests, and exploratory analyses. This helper returns their names
+or the complete path to one installed file.
 }
 \details{
 \code{rphylo.nwk} contains a 500-tip tree generated using
-\code{ape::rphylo(500, 1, 0)}. \code{sim-taxa.nwk} contains a 500-tip tree
-generated using
-\code{TreeSimGM::sim.taxa(1, 500, waitsp = "rexp(1.2)")[[1]]}.
+\code{ape::rphylo(500, 1, 0)}. \code{sim-taxa.nwk} contains a 500-tip tree generated
+using \code{TreeSimGM::sim.taxa(1, 500, waitsp = "rexp(1.2)")[[1]]}.
 }
 \examples{
 tree_index_example()
@@ -33,6 +31,7 @@ tree_index_example()
 tree_file <- tree_index_example("rphylo.nwk")
 tree <- read_convert(tree_file)
 ape::Ntip(tree)
+
 }
 \references{
 Wickham, H. and Bryan, J. (2023). R Packages (2e), Chapter 7: Data.

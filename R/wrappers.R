@@ -1,7 +1,7 @@
 #' Calculate all universal tree shape indices for one tree
 #'
 #' This wrapper validates the input tree and checks that the output indices are
-#' within expected ranges. In particular, J indices are checked to be in [0, 1].
+#' within expected ranges. In particular, J indices are checked to be between `0` and `1`, inclusive.
 #'
 #' @param file A file path, Newick string, or phylo object.
 #' @param node_abundances Optional node abundance data frame passed to the C++
