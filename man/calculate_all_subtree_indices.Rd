@@ -42,9 +42,9 @@ and calculation time.
 \description{
 This function reads a tree or collection of trees, extracts all subtrees
 within a specified tip-count range, and calculates tree shape indices for
-each subtree using \code{\link[=all_indices]{all_indices()}}.
+each subtree using \code{all_indices()}.
 }
 \details{
 Invalid trees are rejected before calculation. Invalid outputs, such as J
-values outside \link{0, 1}, are also rejected.
+values outside the interval from \code{0} to \code{1} are also rejected.
 }

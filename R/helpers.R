@@ -89,7 +89,7 @@ validate_phylo <- function(
     stop(
       context,
       ": tree contains NaN branch length(s) at edge position(s): ",
-      paste(head(bad, 10), collapse = ", "),
+      paste(utils::head(bad, 10), collapse = ", "),
       if (length(bad) > 10) " ...",
       call. = FALSE
     )
@@ -101,7 +101,7 @@ validate_phylo <- function(
     stop(
       context,
       ": tree contains NA branch length(s) at edge position(s): ",
-      paste(head(bad, 10), collapse = ", "),
+      paste(utils::head(bad, 10), collapse = ", "),
       if (length(bad) > 10) " ...",
       call. = FALSE
     )
@@ -113,7 +113,7 @@ validate_phylo <- function(
     stop(
       context,
       ": tree contains infinite branch length(s) at edge position(s): ",
-      paste(head(bad, 10), collapse = ", "),
+      paste(utils::head(bad, 10), collapse = ", "),
       if (length(bad) > 10) " ...",
       call. = FALSE
     )
@@ -128,7 +128,7 @@ validate_phylo <- function(
       length(bad),
       " negative branch length(s). ",
       "Branch lengths must be non-negative. First bad edge position(s): ",
-      paste(head(bad, 10), collapse = ", "),
+      paste(utils::head(bad, 10), collapse = ", "),
       if (length(bad) > 10) " ...",
       call. = FALSE
     )
@@ -290,17 +290,20 @@ resolve_node_abundances <- function(
 }
 
 
+
 prepare_index_inputs <- function(
   file,
   node_abundances = NULL,
   ignore_branch_lengths = FALSE,
   ignore_node_sizes = FALSE
 ) {
+
   ignore_branch_lengths <- validate_logical_flag(
     ignore_branch_lengths,
     "ignore_branch_lengths"
   )
 
+  # 1. Read and validate the input tree
   tree <- assert_single_phylo(
     read_convert(
       file,
@@ -308,42 +311,73 @@ prepare_index_inputs <- function(
     )
   )
 
+  # 2. Apply the ignore_node_sizes setting
+  node_abundances <- resolve_node_abundances(
+    node_abundances,
+    ignore_node_sizes = ignore_node_sizes
+  )
+
+  # 3. NEW: Validate node abundances and prune
+  #    leaves with zero abundance
+  if (!is.null(node_abundances)) {
+
+    validated <- validate_node_abundances(
+      tree = tree,
+      node_abundances = node_abundances
+    )
+
+    tree <- validated$tree
+
+    node_abundances <- validated$node_abundances
+  }
+
+  # 4. Return inputs for the C++ calculations
   list(
     tree = tree,
-    node_abundances = resolve_node_abundances(
-      node_abundances,
-      ignore_node_sizes = ignore_node_sizes
-    )
+    node_abundances = node_abundances
   )
-}
-
-
-safe_extract <- function(x) {
-  if (is.null(x) || length(x) == 0) return(NA_real_)
-  as.numeric(x)
-}
-
-
-safe_write_tree <- function(tr, ignore_branch_lengths = FALSE) {
-  tr <- normalize_phylo(
-    tr,
-    ignore_branch_lengths = ignore_branch_lengths
-  )
-  ape::write.tree(tr)
 }
 
 
 assert_single_phylo <- function(tree, arg = "file") {
+
   if (inherits(tree, "multiPhylo")) {
     stop(
-      "`", arg, "` contains multiple trees. Use calculate_all_subtree_indices() or process_tree_folder() for multiPhylo inputs.",
+      "`", arg, "` contains multiple trees. ",
+      "Use calculate_all_subtree_indices() or ",
+      "process_tree_folder() for multiPhylo inputs.",
       call. = FALSE
     )
   }
 
   if (!inherits(tree, "phylo")) {
-    stop("`", arg, "` must be a phylo object after conversion.", call. = FALSE)
+    stop(
+      "`", arg, "` must be a phylo object ",
+      "after conversion.",
+      call. = FALSE
+    )
   }
 
   tree
+}
+
+
+safe_extract <- function(x) {
+  if (is.null(x) || length(x) == 0) {
+    return(NA_real_)
+  }
+
+  as.numeric(x)
+}
+
+safe_write_tree <- function(
+  tr,
+  ignore_branch_lengths = FALSE
+) {
+  tr <- normalize_phylo(
+    tr,
+    ignore_branch_lengths = ignore_branch_lengths
+  )
+
+  ape::write.tree(tr)
 }

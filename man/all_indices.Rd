@@ -32,7 +32,7 @@ A list containing D0N, D1N, J1N, D0S, D1S, J1S, D0L, D1L, and J1L.
 }
 \description{
 This wrapper validates the input tree and checks that the output indices are
-within expected ranges. In particular, J indices are checked to be in \link{0, 1}.
+within expected ranges. In particular, J indices are checked to be between \code{0} and \code{1}, inclusive.
 }
 \examples{
 tree_file <- tree_index_example("rphylo.nwk")
